@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	<title>Learning vue</title>
+</head>
+<body>
+	<div id="app" class="text-center">
+		<div>
+			<form>
+				  <div class="form-group">
+				    <label >Add Todo</label>
+				    <input type="text" v-model="title" class="form-control" placeholder="Enter Todo">
+				  </div>
+		        	<input type="submit" @click="AddTodo" value="Submit" class="btn">
+
+			</form>
+		</div>
+		
+		<div v-for="todo in todos">
+			<ul class="list-group">
+			  <li class="list-group-item">[[ todo.title ]]</li>
+			</ul>		
+		</div>
+				<person-greeter personName="todo.title"/>
+
+
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+	<script>
+		Vue.component('person-greeter', {
+  			props: ['personName'],
+  			template: '<h2>Hello, [[ personName ]]!</h2>',
+
+		})
+
+
+		var app = new Vue({
+		  delimiters: ['[[', ']]'],
+		  el: '#app',
+		  data: {
+				title: '',
+				completed : false,
+				todos: []
+  		  },
+  		  mounted() {
+        	this.getTodos();
+		},
+  		  methods:{
+  		  	AddTodo(){
+            axios.post(`/todo/`, {
+                title: this.title,
+                completed: false
+            })
+            .then((response) => {
+  				console.log(response);
+				}, (error) => {
+  				console.log(error);
+			});
+  		  },
+  		  getTodos(){
+            let vm=this
+            axios.get(`/todo/`)
+                .then((response) => {
+                	console.log(response);
+                    vm.todos = response.data;
+                    console.log(response.data);
+                    
+                })
+                .finally(() => $(document).ready(function(){
+                    $(".nav-tabs a").click(function(){
+                    $(this).tab('show');
+                    });
+				}))
+  			}
+		}
+
+		})
+	</script>
+
+</body>
+
