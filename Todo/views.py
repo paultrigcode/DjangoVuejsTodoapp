@@ -35,3 +35,21 @@ class TodoView(View):
             model = form.save()
             model.save()
         return JsonResponse(data={"valid": False,"errors": form.errors},safe=False)
+
+@csrf_exempt
+def markComplete(request,id):
+    todo = Todo.objects.filter(id=id).update(completed = True)
+    response_data = {
+                "todo": todo,
+            }
+    return JsonResponse(response_data,safe=False)
+
+@csrf_exempt
+def delete(request,id):
+    todo = Todo.objects.filter(id=id).delete()
+    response_data = {
+                "todo": todo,
+            }
+    return JsonResponse({'success':True},safe=False)
+
+
