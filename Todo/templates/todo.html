@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="app" class="text-center">
+		<div>
+			<form>
+				  <div class="form-group">
+				    <label >Add Todo</label>
+				    <input type="text" v-model="title" class="form-control" placeholder="Enter Todo">
+				  </div>
+		        	<input type="submit" @click="AddTodo" value="Submit" class="btn">
+
+			</form>
+			<br/><br/>
+		</div>
+		
+		<div v-for="todo in todos">
+			  	<div class="card w-50">
+						<div class="card-body">
+						<h5 class="card-title">[[todo.id]]</h5>
+						<p class="card-text" v-bind:class="{'is-complete':todo.completed}"> [[todo.title]]</p>
+							<input type="checkbox" v-on:change="markComplete(todo.id)" v-bind:checked="todo.completed" v-if="todo.completed == true" disabled>
+							<input type="checkbox" v-on:change="markComplete(todo.id)" v-bind:checked="todo.completed" v-else="todo.completed == true">
+						<a href="#" @click="Delete(todo.id)" class="btn btn-primary a-btn-slide-text">
+						       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						        <span><strong>Delete</strong></span>            
+					    </a>
+						</div>
+				</div>
+			<br/>
+
+<!-- 			</ul>		
+ -->	</div>
+
+
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+	<script>
+		var app = new Vue({
+		  delimiters: ['[[', ']]'],
+		  el: '#app',
+		  data: {
+				title: '',
+				completed : false,
+				todos: []
+  		  },
+  		  mounted() {
+        	this.getTodos();
+		},
+  		methods:{
+	  		  	AddTodo(){
+	            axios.post(`/todo/`, {
+	                title: this.title,
+	                completed: false
+	            })
+	            .then((response) => {
+	  				console.log(response);
+					}, (error) => {
+	  				console.log(error);
+				});
+				this.getTodos();
+				this.title = ""
+	  		  },
+	  		  getTodos(){
+	            let vm=this
+	            axios.get(`/todo/`)
+	                .then((response) => {
+	                	console.log(response);
+	                    vm.todos = response.data;
+	                    console.log(response.data);
+	                    
+	                })
+	                .finally(() => $(document).ready(function(){
+	                    $(".nav-tabs a").click(function(){
+	                    $(this).tab('show');
+	                    });
+					}))
+	  			},
+	  			markComplete(id){
+	                if(confirm("Do you really want to Complete This Requisition?")){
+	                    axios.post(`/todo/${id}/complete/`)
+	                        .then((response) => {
+	                            this.getTodos()
+	                        })
+	                }
+	            },
+	            Delete(id){
+            		if(confirm("Do you really want to Delete This Todo?")){
+                		axios.post(`/todo/${id}/delete/`)
+                    		.then((response) => {
+                        	this.getTodos()
+                    	})
+            		}
+        		},
+        }
+
+		})
+	</script>
+{% endblock %}

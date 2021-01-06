@@ -16,7 +16,7 @@ from .models import Todo
 # Create your views here.
 
 def home(request):
-    return render(request,'base.html')
+    return render(request,'todo.html')
 
 @method_decorator(csrf_exempt, name='dispatch')
 class TodoView(View):
