@@ -52,4 +52,7 @@ class UserView(View):
         if form.is_valid():
             model = form.save()
             model.save()
-        return JsonResponse(data={"valid": True},safe=False)
+            return JsonResponse(data={"valid": True},safe=False)
+        else:
+            return JsonResponse(data={"valid": False},safe=False)
+
