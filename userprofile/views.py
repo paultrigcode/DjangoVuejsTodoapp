@@ -16,6 +16,7 @@ from .forms import UserForm
 # Create your views here.
 @csrf_exempt
 def user_create(request):
+	print(request)
 	username = request.GET.get('username')
 	print(username)
 	email = request.GET.get('email')
@@ -45,6 +46,7 @@ class UserView(View):
         json_request = QueryDict('', mutable=True)
         json_request.update(json.loads(request.body))
         print(json_request)
+        json_request['password'] = make_password(json_request['password'])
         form = UserForm(json_request)
         print(form)
         if form.is_valid():
