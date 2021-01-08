@@ -7,6 +7,9 @@ from django.utils.decorators import method_decorator
 from django.views import View
 import json
 from .forms import UserForm
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 
 
@@ -55,4 +58,23 @@ class UserView(View):
             return JsonResponse(data={"valid": True},safe=False)
         else:
             return JsonResponse(data={"valid": False},safe=False)
+
+
+
+
+
+def get_all_logged_in_users(request):
+    # Query all non-expired sessions
+    # use timezone.now() instead of datetime.now() in latest versions of Django
+    sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    uid_list = []
+
+    # Build a list of user ids from that query
+    for session in sessions:
+        data = session.get_decoded()
+        uid_list.append(data.get('_auth_user_id', None))
+
+    # Query all logged in users based on id list
+    user = list(User.objects.filter(id__in=uid_list).values())
+    return JsonResponse(data= {'user':user},safe =False)
 
