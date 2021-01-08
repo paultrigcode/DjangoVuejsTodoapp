@@ -77,23 +77,23 @@ WSGI_APPLICATION = 'Todoapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.getenv("DB_NAME","todo"),                      # Or path to database file if using sqlite3.
-        'USER': os.getenv("DB_USER", "paultrigcode"),
-        'PASSWORD': os.getenv("DB_PASS", "paultrigcode"),
-        # 'HOST': os.getenv("DB_HOST", "0.0.0"),
-        # 'PORT': os.getenv("DB_PORT", "3306"),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'NAME': os.getenv("DB_NAME","todo"),                      # Or path to database file if using sqlite3.
+#         'USER': os.getenv("DB_USER", "paultrigcode"),
+#         'PASSWORD': os.getenv("DB_PASS", "paultrigcode"),
+#         # 'HOST': os.getenv("DB_HOST", "0.0.0"),
+#         # 'PORT': os.getenv("DB_PORT", "3306"),
+#     }
+# }
 
 
 
